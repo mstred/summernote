@@ -6,7 +6,7 @@
  * Copyright 2013-2015 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2015-03-14T02:38Z
+ * Date: 2015-04-09T10:52Z
  */
 (function (factory) {
   /* global define */
@@ -3304,6 +3304,9 @@
 
     /**
      * @method fontName
+     *
+     * change font name
+     *
      * @param {jQuery} $editable
      * @param {Mixed} value
      */
@@ -3493,7 +3496,6 @@
 
     /**
      * fontsize
-     * FIXME: Still buggy
      *
      * @param {jQuery} $editable
      * @param {String} value - px
@@ -3582,10 +3584,12 @@
       }
 
       $.each(anchors, function (idx, anchor) {
-        $(anchor).attr({
-          href: linkUrl,
-          target: isNewWindow ? '_blank' : ''
-        });
+        $(anchor).attr('href', linkUrl);
+        if (isNewWindow) {
+          $(anchor).attr('target', '_blank');
+        } else {
+          $(anchor).removeAttr('target');
+        }
       });
 
       var startRange = range.createFromNode(list.head(anchors)).collapse(true);
@@ -3623,7 +3627,7 @@
       return {
         range: rng,
         text: rng.toString(),
-        isNewWindow: $anchor.length ? $anchor.attr('target') === '_blank' : true,
+        isNewWindow: $anchor.length ? $anchor.attr('target') === '_blank' : false,
         url: $anchor.length ? $anchor.attr('href') : ''
       };
     };
@@ -3754,6 +3758,15 @@
       }
 
       afterCommand($editable);
+    };
+
+    /**
+     * set focus
+     *
+     * @param $editable
+     */
+    this.focus = function ($editable) {
+      $editable.focus();
     };
   };
 
@@ -4103,7 +4116,13 @@
       if (styleInfo.anchor) {
         var $anchor = $linkPopover.find('a');
         var href = $(styleInfo.anchor).attr('href');
+        var target = $(styleInfo.anchor).attr('target');
         $anchor.attr('href', href).html(href);
+        if (!target) {
+          $anchor.removeAttr('target');
+        } else {
+          $anchor.attr('target', '_blank');
+        }
         showPopover($linkPopover, posFromPlaceholder(styleInfo.anchor, isAirMode));
       } else {
         $linkPopover.hide();
