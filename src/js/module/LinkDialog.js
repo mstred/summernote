@@ -34,6 +34,7 @@ define(function () {
           $linkText.val(linkInfo.text);
 
           $linkText.on('input', function () {
+            toggleBtn($linkBtn, $linkText.val() && $linkUrl.val());
             // if linktext was modified by keyup,
             // stop cloning text from linkUrl
             linkInfo.text = $linkText.val();
@@ -46,7 +47,7 @@ define(function () {
           }
 
           $linkUrl.on('input', function () {
-            toggleBtn($linkBtn, $linkUrl.val());
+            toggleBtn($linkBtn, $linkText.val() && $linkUrl.val());
             // display same link on `Text to display` input
             // when create a new link
             if (!linkInfo.text) {
