@@ -6,7 +6,7 @@
  * Copyright 2013-2015 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2015-04-28T12:22Z
+ * Date: 2015-04-29T21:12Z
  */
 (function (factory) {
   /* global define */
@@ -3675,11 +3675,11 @@
         linkUrl = options.onCreateLink(linkUrl);
       }
 
-      var anchors;
+      var anchors = [];
       if (isTextChanged) {
         // Create a new link when text changed.
         var anchor = rng.insertNode($('<A>' + linkText + '</A>')[0]);
-        anchors = [anchor];
+        anchors.push(anchor);
       } else {
         anchors = style.styleNodes(rng, {
           nodeName: 'A',
@@ -4756,6 +4756,7 @@
           $linkText.val(linkInfo.text);
 
           $linkText.on('input', function () {
+            toggleBtn($linkBtn, $linkText.val() && $linkUrl.val());
             // if linktext was modified by keyup,
             // stop cloning text from linkUrl
             linkInfo.text = $linkText.val();
@@ -4768,7 +4769,7 @@
           }
 
           $linkUrl.on('input', function () {
-            toggleBtn($linkBtn, $linkUrl.val());
+            toggleBtn($linkBtn, $linkText.val() && $linkUrl.val());
             // display same link on `Text to display` input
             // when create a new link
             if (!linkInfo.text) {
