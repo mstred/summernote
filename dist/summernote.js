@@ -1,12 +1,12 @@
 /**
- * Super simple wysiwyg editor on Bootstrap v0.6.8
+ * Super simple wysiwyg editor on Bootstrap v0.6.9
  * http://summernote.org/
  *
  * summernote.js
  * Copyright 2013-2015 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2015-06-21T11:34Z
+ * Date: 2015-06-25T12:15Z
  */
 (function (factory) {
   /* global define */
@@ -516,9 +516,14 @@
 
         // frame mode
       } else {
-        makeFinder = function (sClassName) {
-          return function () { return $editor.find(sClassName); };
+        makeFinder = function (sClassName, sBaseElement) {
+          var $baseElement = sBaseElement ? $(sBaseElement) : $editor;
+          return function () { return $baseElement.find(sClassName); };
         };
+
+        var options = $editor.data('options');
+        var dialogHolder = (options && options.dialogsInBody) ? document.body : null;
+
         return {
           editor: function () { return $editor; },
           holder : function () { return $editor.data('holder'); },
@@ -529,7 +534,7 @@
           statusbar: makeFinder('.note-statusbar'),
           popover: makeFinder('.note-popover'),
           handle: makeFinder('.note-handle'),
-          dialog: makeFinder('.note-dialog')
+          dialog: makeFinder('.note-dialog', dialogHolder)
         };
       }
     };
@@ -2271,7 +2276,7 @@
    */
   var defaults = {
     /** @property */
-    version: '0.6.8',
+    version: '0.6.9',
 
     /**
      * 
@@ -6449,7 +6454,7 @@
                    '<div class="title">' + lang.shortcut.shortcuts + '</div>' +
                    (agent.isMac ? tplShortcutTable(lang, options) : replaceMacKeys(tplShortcutTable(lang, options))) +
                    '<p class="text-center">' +
-                     '<a href="//summernote.org/" target="_blank">Summernote 0.6.8</a> · ' +
+                     '<a href="//summernote.org/" target="_blank">Summernote 0.6.9</a> · ' +
                      '<a href="//github.com/summernote/summernote" target="_blank">Project</a> · ' +
                      '<a href="//github.com/summernote/summernote/issues" target="_blank">Issues</a>' +
                    '</p>';
@@ -6654,8 +6659,10 @@
       //06. handle(control selection, ...)
       $(tplHandles()).prependTo($editor);
 
+      var $dialogContainer = options.dialogsInBody ? document.body : $editor;
+
       //07. create Dialog
-      var $dialog = $(tplDialogs(langInfo, options)).prependTo($editor);
+      var $dialog = $(tplDialogs(langInfo, options)).prependTo($dialogContainer);
       $dialog.find('button.close, a.modal-close').click(function () {
         $(this).closest('.modal').modal('hide');
       });
@@ -6733,6 +6740,9 @@
       } else {
         $holder.html(layoutInfo.editable().html());
 
+        if (options.dialogsInBody) {
+          layoutInfo.dialog().remove();
+        }
         layoutInfo.editor().remove();
         $holder.show();
       }
