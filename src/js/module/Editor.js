@@ -630,6 +630,8 @@ define([
       }
 
       $.each(anchors, function (idx, anchor) {
+        // if url doesn't match an URL schema, set http:// as default
+        linkUrl = /^(\S+:\/\/)/.test(linkUrl) ? linkUrl : 'http://' + linkUrl;
         $(anchor).attr('href', linkUrl);
         if (isNewWindow) {
           $(anchor).attr('target', '_blank');
