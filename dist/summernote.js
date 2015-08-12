@@ -6,7 +6,7 @@
  * Copyright 2013-2015 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2015-08-03T16:41Z
+ * Date: 2015-08-12T12:30Z
  */
 (function (factory) {
   /* global define */
@@ -4126,6 +4126,8 @@
       }
 
       $.each(anchors, function (idx, anchor) {
+        // if url doesn't match an URL schema, set http:// as default
+        linkUrl = /^(\S+:\/\/)/.test(linkUrl) ? linkUrl : 'http://' + linkUrl;
         $(anchor).attr('href', linkUrl);
         if (isNewWindow) {
           $(anchor).attr('target', '_blank');
