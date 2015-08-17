@@ -191,7 +191,8 @@ define([
       if (!styleInfo) {
         return;
       }
-      var isAirMode = layoutInfo.editor().data('options').airMode;
+      var $editorOptions = layoutInfo.editor().data('options');
+      var isAirMode = $editorOptions && $editorOptions.airMode;
       if (!isAirMode) {
         modules.toolbar.update(layoutInfo.toolbar(), styleInfo);
       }
