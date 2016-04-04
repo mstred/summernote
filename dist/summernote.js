@@ -6,7 +6,7 @@
  * Copyright 2013-2015 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2016-02-15T18:35Z
+ * Date: 2016-04-04T02:26Z
  */
 (function (factory) {
   /* global define */
@@ -4255,6 +4255,11 @@
       var rng = linkInfo.range || this.createRange();
       var isTextChanged = rng.toString() !== linkText;
 
+      // handle spaced urls from input
+      if (typeof linkUrl === 'string') {
+        linkUrl = linkUrl.trim();
+      }
+
       if (options.onCreateLink) {
         linkUrl = options.onCreateLink(linkUrl);
       }
@@ -4273,6 +4278,10 @@
       }
 
       $.each(anchors, function (idx, anchor) {
+        // if url doesn't match an URL schema, set http:// as default
+        linkUrl = /^[A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?/.test(linkUrl) ?
+          linkUrl : 'http://' + linkUrl;
+
         $(anchor).attr('href', linkUrl);
         if (isNewWindow) {
           $(anchor).attr('target', '_blank');
@@ -4772,6 +4781,7 @@
 
     this.destroy = function () {
       $statusbar.off();
+      $statusbar.remove();
     };
   };
 
@@ -4938,7 +4948,7 @@
   var AutoLink = function (context) {
     var self = this;
     var defaultScheme = 'http://';
-    var linkPattern = /^(https?:\/\/|ssh:\/\/|ftp:\/\/|file:\/|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
+    var linkPattern = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|mailto:[A-Z0-9._%+-]+@)?(www\.)?(.+)$/i;
 
     this.events = {
       'summernote.keyup': function (we, e) {
