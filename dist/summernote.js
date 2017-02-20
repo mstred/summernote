@@ -6,7 +6,7 @@
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-01-09T00:34Z
+ * Date: 2017-02-20T20:35Z
  */
 (function (factory) {
   /* global define */
@@ -4370,7 +4370,7 @@
 
       $.each(anchors, function (idx, anchor) {
         // if url doesn't match an URL schema, set http:// as default
-        linkUrl = /^[A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?/.test(linkUrl) ?
+        linkUrl = /^([A-Za-z][A-Za-z0-9+-.]*\:[\/\/]?|\/|#)/.test(linkUrl) ?
           linkUrl : 'http://' + linkUrl;
 
         $(anchor).attr('href', linkUrl);
