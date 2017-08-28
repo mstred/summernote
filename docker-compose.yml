@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  workspace:
+    image: digitallyseamless/nodejs-bower-grunt
+    ports:
+      - 3000:3000
+    volumes:
+      - ${PWD}:/data
+    entrypoint: bash
+    stdin_open: true
+    tty: true
